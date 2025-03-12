@@ -31,7 +31,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter:
     sdk: flutter
-  # wifi_iot: ^0.3.19+2
+  wifi_iot: ^0.3.19+2
 
 dev_dependencies:
   flutter_lints: ^4.0.0

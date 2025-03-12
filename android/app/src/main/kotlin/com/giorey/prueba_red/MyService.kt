@@ -4,12 +4,7 @@ import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.net.NetworkRequest
-import android.net.wifi.WifiManager
-import android.net.wifi.WifiNetworkSpecifier
-import android.os.Build
+
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
@@ -78,28 +73,7 @@ class MyService : Service() {
 
 
     fun connectToWifi(context: Context, ssid: String, password: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val wifiSpecifier = WifiNetworkSpecifier.Builder()
-                .setSsid(ssid)
-                .setWpa2Passphrase(password) // Usa WPA2 (o cambia si es necesario)
-                .build()
 
-            val networkRequest = NetworkRequest.Builder()
-                .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
-                .setNetworkSpecifier(wifiSpecifier)
-                .build()
-
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            connectivityManager.requestNetwork(networkRequest, object : ConnectivityManager.NetworkCallback() {
-                override fun onAvailable(network: android.net.Network) {
-                    Log.d("MyForegroundService", "Conectado a $ssid")
-                }
-            })
-        } else {
-            val wifiManager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-            wifiManager.isWifiEnabled = true
-            Log.d("MyForegroundService", "Intentando conectar a $ssid (solo funciona en Android <10)")
-        }
     }
 
 

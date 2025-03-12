@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wifi_iot/wifi_iot.dart';
 // import 'package:wifi_iot/wifi_iot.dart';
 
 void main() {
@@ -40,37 +41,37 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   bool _isStarted = false;
 
   void startForegroundService() async {
-    try {
-      await platform.invokeMethod('startService');
-      setState(() {
-        _isStarted = true;
-      });
-      // await switchWiFi("Megacable_5G_8540", "HXbapQRb");
-    } on PlatformException catch (e) {
-      setState(() {
-        _isStarted = false;
-      });
-      if (kDebugMode) {
-        print("Error al iniciar el servicio: '${e.message}'.");
-      }
-    }
+    // try {
+    // await platform.invokeMethod('startService');
+    // setState(() {
+    //   _isStarted = true;
+    // });
+    await switchWiFi("Megacable_5G_8540", "HXbapQRb");
+    // } on PlatformException catch (e) {
+    // setState(() {
+    //   _isStarted = false;
+    // });
+    // if (kDebugMode) {
+    //   print("Error al iniciar el servicio: '${e.message}'.");
+    // }
+    // }
   }
 
   void stopForegroundService() async {
-    try {
-      await platform.invokeMethod('stopService');
-      setState(() {
-        _isStarted = false;
-      });
-      // await switchWiFi("Megacable_2.4G_8540", "HXbapQRb");
-    } on PlatformException catch (e) {
-      setState(() {
-        _isStarted = true;
-      });
-      if (kDebugMode) {
-        print("Error al detener el servicio: '${e.message}'.");
-      }
-    }
+    // try {
+    // await platform.invokeMethod('stopService');
+    // setState(() {
+    //   _isStarted = false;
+    // });
+    await switchWiFi("Galaxy A05 7603", "1234567890");
+    // } on PlatformException catch (e) {
+    //   setState(() {
+    //     _isStarted = true;
+    //   });
+    //   if (kDebugMode) {
+    //     print("Error al detener el servicio: '${e.message}'.");
+    //   }
+    // }
   }
 
   @override
@@ -123,22 +124,22 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     print("App cerrada manualmente");
   }
 
-  // /// Conectar a una red Wi-Fi con contraseña
-  // Future<void> switchWiFi(String ssid, String password) async {
-  //   bool isConnected = await WiFiForIoTPlugin.connect(
-  //     ssid,
-  //     password: password,
-  //     security:
-  //         NetworkSecurity.WPA, // Ajusta el tipo de seguridad si es necesario
-  //   );
+  /// Conectar a una red Wi-Fi con contraseña
+  Future<void> switchWiFi(String ssid, String password) async {
+    bool isConnected = await WiFiForIoTPlugin.connect(
+      ssid,
+      password: password,
+      security:
+          NetworkSecurity.WPA, // Ajusta el tipo de seguridad si es necesario
+    );
 
-  //   if (isConnected) {
-  //     red = ssid;
-  //     print("Conectado a $ssid");
-  //   } else {
-  //     print("No se pudo conectar a $ssid");
-  //   }
-  // }
+    if (isConnected) {
+      red = ssid;
+      print("Conectado a $ssid");
+    } else {
+      print("No se pudo conectar a $ssid");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,15 +169,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           if (_isStarted) {
-            if (kDebugMode) {
-              print('SE DETUVO EL SERVICIO');
-            }
             stopForegroundService();
+
+            setState(() {
+              _isStarted = false;
+            });
           } else {
-            if (kDebugMode) {
-              print('SE INICIO EL SERVICIO');
-            }
             startForegroundService();
+            setState(() {
+              _isStarted = true;
+            });
           }
         },
         tooltip: 'INICIAR TERMINAR SERVICIO',
